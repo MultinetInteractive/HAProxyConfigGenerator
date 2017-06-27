@@ -4,9 +4,16 @@ namespace HAProxyConfigGenerator
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+			if (args.Length < 1)
+			{
+				Console.WriteLine("Please provide path to HAProxy-JSON.");
+				return -1;
+			}
+
+            Console.WriteLine("TODO: Write the actual code");
+			return 0;
         }
     }
 }
