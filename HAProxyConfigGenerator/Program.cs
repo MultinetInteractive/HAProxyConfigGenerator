@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 
 namespace HAProxyConfigGenerator
 {
@@ -8,11 +10,20 @@ namespace HAProxyConfigGenerator
         {
 			if (args.Length < 1)
 			{
-				Console.WriteLine("Please provide path to HAProxy-JSON.");
+				Console.Error.WriteLine("Please provide path to HAProxy-JSON.");
 				return -1;
 			}
 
-            Console.WriteLine("TODO: Write the actual code");
+			var path = args.First();
+
+			if (!File.Exists(path))
+			{
+				Console.Error.WriteLine("The file provided does not exist.");
+				return -1;
+			}
+
+			var cfg = HAProxyConfig.Parse(path);
+			Console.WriteLine(cfg.ToHAProxyConfigString());			
 			return 0;
         }
     }
