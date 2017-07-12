@@ -387,15 +387,6 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine();
 			}
 
-			if (f.Redirect != null)
-			{
-				foreach (var sch in f.Redirect.Scheme)
-				{
-					sb.AppendLine(string.Format("    redirect	scheme	{0}	{1}	{2} {3}", sch.Protocol, (sch.Code.HasValue ? "code " + sch.Code : ""), string.Join(" ", sch.Option), string.Join(" ", sch.Conditions)));
-				}
-				sb.AppendLine();
-			}
-
 			foreach (var rs in f.RspIDel)
 			{
 				sb.AppendLine(string.Format("    rspidel	{0}", rs));
@@ -407,6 +398,15 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
 			}
 			sb.AppendLine();
+
+			if (f.Redirect != null)
+			{
+				foreach (var sch in f.Redirect.Scheme)
+				{
+					sb.AppendLine(string.Format("    redirect	scheme	{0}	{1}	{2} {3}", sch.Protocol, (sch.Code.HasValue ? "code " + sch.Code : ""), string.Join(" ", sch.Option), string.Join(" ", sch.Conditions)));
+				}
+				sb.AppendLine();
+			}
 
 			foreach (var ub in f.BackEnds)
 			{
@@ -545,6 +545,12 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine();
 			}
 
+			foreach (var reqirep in b.ReqIRep)
+			{
+				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
+			}
+			sb.AppendLine();
+
 			if (b.Redirect != null)
 			{
 				foreach (var sch in b.Redirect.Scheme)
@@ -553,12 +559,6 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 			}
-
-			foreach (var reqirep in b.ReqIRep)
-			{
-				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
-			}
-			sb.AppendLine();
 
 			if (b.HttpCheck?.Expect.Count > 0)
 			{
