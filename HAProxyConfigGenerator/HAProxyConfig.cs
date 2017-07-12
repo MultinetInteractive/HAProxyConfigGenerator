@@ -408,8 +408,6 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine();
 			}
 
-
-
 			foreach (var ub in f.BackEnds)
 			{
 				sb.AppendLine(string.Format("    use_backend	{0}	{1}", ub.Backend, (ub.Conditions is bool ? "" : string.Join(" ", ((JArray)ub.Conditions).ToList()))));
@@ -510,6 +508,12 @@ namespace HAProxyConfigGenerator
 			}
 			sb.AppendLine();
 
+			foreach (var reqirep in b.ReqIRep)
+			{
+				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
+			}
+			sb.AppendLine();
+
 			if (b.HttpRequest != null)
 			{
 				foreach (var sh in b.HttpRequest.SetHeader)
@@ -561,10 +565,6 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine(string.Format("    http-check	expect	{0}", string.Join(" ", b.HttpCheck.Expect)).TrimEnd());
 			}
 
-			foreach (var reqirep in b.ReqIRep)
-			{
-				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
-			}
 			sb.AppendLine();
 
 			foreach (var s in b.Servers)
