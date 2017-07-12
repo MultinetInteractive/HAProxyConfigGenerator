@@ -332,18 +332,6 @@ namespace HAProxyConfigGenerator
 			}
 			sb.AppendLine();
 
-			foreach (var rs in f.RspIDel)
-			{
-				sb.AppendLine(string.Format("    rspidel	{0}", rs));
-			}
-			sb.AppendLine();
-
-			foreach (var reqirep in f.ReqIRep)
-			{
-				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
-			}
-			sb.AppendLine();
-
 			foreach (var kv in f.Option)
 			{
 				var vd = kv.Value as JObject;
@@ -407,6 +395,18 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 			}
+
+			foreach (var rs in f.RspIDel)
+			{
+				sb.AppendLine(string.Format("    rspidel	{0}", rs));
+			}
+			sb.AppendLine();
+
+			foreach (var reqirep in f.ReqIRep)
+			{
+				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
+			}
+			sb.AppendLine();
 
 			foreach (var ub in f.BackEnds)
 			{
@@ -508,12 +508,6 @@ namespace HAProxyConfigGenerator
 			}
 			sb.AppendLine();
 
-			foreach (var reqirep in b.ReqIRep)
-			{
-				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
-			}
-			sb.AppendLine();
-
 			if (b.HttpRequest != null)
 			{
 				foreach (var sh in b.HttpRequest.SetHeader)
@@ -559,6 +553,12 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 			}
+
+			foreach (var reqirep in b.ReqIRep)
+			{
+				sb.AppendLine(string.Format("    reqirep	{0}	{1}	{2}", reqirep.Match, reqirep.Replace, string.Join(" ", reqirep.Conditions)));
+			}
+			sb.AppendLine();
 
 			if (b.HttpCheck?.Expect.Count > 0)
 			{
