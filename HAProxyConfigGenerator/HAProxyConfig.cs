@@ -23,6 +23,13 @@ namespace HAProxyConfigGenerator
 
 		#region Subclasses
 
+		public class Compression
+		{
+			public List<string> Algorithms { get; set; } = new List<string>();
+			public List<string> Types { get; set; } = new List<string>();
+			public bool Offload { get; set; }
+		}
+
 		public class Frontend
 		{
 			public string Name { get; set; }
@@ -30,6 +37,8 @@ namespace HAProxyConfigGenerator
 			public string Mode { get; set; }
 			[JsonProperty("default_backend")]
 			public string DefaultBackend { get; set; }
+
+			public Compression Compression { get; set; }
 
 			public CaptureItem Capture { get; set; }
 
@@ -75,6 +84,8 @@ namespace HAProxyConfigGenerator
 			public string Balance { get; set; }
 			public long? FullConn { get; set; }
 			public string Mode { get; set; }
+
+			public Compression Compression { get; set; }
 
 			public List<ACLRow> ACL { get; set; } = new List<ACLRow>();
 			public Dictionary<string, object> Option { get; set; } = new Dictionary<string, object>();
@@ -195,6 +206,9 @@ namespace HAProxyConfigGenerator
 			public string Log { get; set; }
 			public string Mode { get; set; }
 			public string Balance { get; set; }
+
+			public Compression Compression { get; set; }
+
 			public long? MaxConn { get; set; }
 			public int? Retries { get; set; }
 			public Dictionary<string, string> ErrorFile { get; set; } = new Dictionary<string, string>();
@@ -310,6 +324,23 @@ namespace HAProxyConfigGenerator
 			{
 				sb.AppendLine(string.Format("    maxconn	{0}", f.MaxConn).TrimEnd());
 			}
+
+			if (f.Compression != null)
+			{
+				if (f.Compression.Algorithms?.Count > 0)
+				{
+					sb.AppendLine("compression algo " + string.Join(" ", f.Compression.Algorithms));
+				}
+				if (f.Compression.Types?.Count > 0)
+				{
+					sb.AppendLine("compression type " + string.Join(" ", f.Compression.Types));
+				}
+				if (f.Compression.Offload)
+				{
+					sb.AppendLine("compression offload");
+				}
+			}
+			sb.AppendLine();
 
 			foreach (var a in f.ACL)
 			{
@@ -449,6 +480,23 @@ namespace HAProxyConfigGenerator
 			if (b.FullConn.HasValue)
 			{
 				sb.AppendLine(string.Format("    fullconn	{0}", b.FullConn).TrimEnd());
+			}
+			sb.AppendLine();
+
+			if (b.Compression != null)
+			{
+				if (b.Compression.Algorithms?.Count > 0)
+				{
+					sb.AppendLine("compression algo " + string.Join(" ", b.Compression.Algorithms));
+				}
+				if (b.Compression.Types?.Count > 0)
+				{
+					sb.AppendLine("compression type " + string.Join(" ", b.Compression.Types));
+				}
+				if (b.Compression.Offload)
+				{
+					sb.AppendLine("compression offload");
+				}
 			}
 			sb.AppendLine();
 
@@ -603,6 +651,23 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine(string.Format("    retries	{0}", Defaults.Retries).TrimEnd());
 			}
 
+			sb.AppendLine();
+
+			if (Defaults.Compression != null)
+			{
+				if (Defaults.Compression.Algorithms?.Count > 0)
+				{
+					sb.AppendLine("compression algo " + string.Join(" ", Defaults.Compression.Algorithms));
+				}
+				if (Defaults.Compression.Types?.Count > 0)
+				{
+					sb.AppendLine("compression type " + string.Join(" ", Defaults.Compression.Types));
+				}
+				if (Defaults.Compression.Offload)
+				{
+					sb.AppendLine("compression offload");
+				}
+			}
 			sb.AppendLine();
 
 			foreach (var kv in Defaults.ErrorFile)
