@@ -206,6 +206,8 @@ namespace HAProxyConfigGenerator
 			public string Log { get; set; }
 			public string Mode { get; set; }
 			public string Balance { get; set; }
+			[JsonProperty("load-server-state-from-file")]
+			public string LoadServerStateFromFile { get; set; }
 
 			public Compression Compression { get; set; }
 
@@ -240,6 +242,8 @@ namespace HAProxyConfigGenerator
 			public string SSLDefaultBindOptions { get; set; }
 			[JsonProperty("spread-checks")]
 			public int? SpreadChecks { get; set; }
+			[JsonProperty("server-state-file")]
+			public string ServerStateFile { get; set; }
 
 			public Dictionary<string, string> Stats { get; set; } = new Dictionary<string, string>();
 			public Dictionary<string, object> Tune { get; set; } = new Dictionary<string, object>();
@@ -650,6 +654,11 @@ namespace HAProxyConfigGenerator
 			{
 				sb.AppendLine(string.Format("    retries	{0}", Defaults.Retries).TrimEnd());
 			}
+			
+			if(!string.IsNullOrWhiteSpace(Defaults.LoadServerStateFromFile))
+			{
+				sb.AppendLine(string.Format("    load-server-state-from-file	{0}", Defaults.LoadServerStateFromFile).TrimEnd());
+			}
 
 			sb.AppendLine();
 
@@ -728,6 +737,11 @@ namespace HAProxyConfigGenerator
 			if (!string.IsNullOrWhiteSpace(Global.CHRoot))
 			{
 				sb.AppendLine(string.Format("    chroot	{0}", Global.CHRoot).TrimEnd());
+			}
+			
+			if(!string.IsNullOrWhiteSpace(Global.ServerStateFile))
+			{
+				sb.AppendLine(string.Format("    server-state-file {0}", Global.ServerStateFile).TrimEnd());
 			}
 
 			if (Global.Daemon.HasValue && Global.Daemon.Value)
