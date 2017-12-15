@@ -244,6 +244,10 @@ namespace HAProxyConfigGenerator
 			public int? SpreadChecks { get; set; }
 			[JsonProperty("server-state-file")]
 			public string ServerStateFile { get; set; }
+			[JsonProperty("ssl-engine")]
+			public string SSLEngine { get; set; }
+			[JsonProperty("ssl-mode-async")]
+			public bool SSLModeAsync { get; set; }
 
 			public Dictionary<string, string> Stats { get; set; } = new Dictionary<string, string>();
 			public Dictionary<string, object> Tune { get; set; } = new Dictionary<string, object>();
@@ -784,6 +788,16 @@ namespace HAProxyConfigGenerator
 			if (!string.IsNullOrWhiteSpace(Global.SSLDefaultBindOptions))
 			{
 				sb.AppendLine(string.Format("    ssl-default-bind-options	{0}", Global.SSLDefaultBindOptions).TrimEnd());
+			}
+			
+			if (!string.IsNullOrWhiteSpace(Global.SSLEngine))
+			{
+				sb.AppendLine(string.Format("    ssl-engine	{0}", Global.SSLEngine).TrimEnd());
+			}
+			
+			if(Global.SSLModeAsync)
+			{
+				sb.AppendLine("    ssl-mode-async");
 			}
 
 			sb.AppendLine();
