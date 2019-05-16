@@ -141,6 +141,11 @@ namespace HAProxyConfigGenerator
 			public List<ReplaceHeader> ReplaceHeader { get; set; } = new List<ReplaceHeader>();
 			[JsonProperty("redirect")]
 			public List<RedirectHeader> Redirect { get; set; } = new List<RedirectHeader>();
+			
+			[JsonProperty("deny")]
+			public List<string> Deny { get; set } = new List<string>();
+			[JsonProperty("silent-drop")]
+			public List<string> SilentDrop { get; set } = new List<string>();
 		}
 
 		public class Redirect
@@ -407,6 +412,20 @@ namespace HAProxyConfigGenerator
 					sb.AppendLine(string.Format("    http-request	redirect	{0}	{1}	{2}", (sh.Code.HasValue ? "code " + sh.Code + "	location" : "location"), sh.Url, string.Join(" ", sh.Conditions)));
 				}
 
+				sb.AppendLine();
+				
+				if(f.HttpRequest.Deny.Count > 0)
+				{
+					sb.AppendLine(string.Format("    http-request	deny	if {0}", string.Join(" ", f.HttpRequest.Deny)))
+				}
+				
+				sb.AppendLine();
+				
+				if(f.HttpRequest.SilentDrop.Count > 0)
+				{
+					sb.AppendLine(string.Format("    http-request	silent-drop	if {0}", string.Join(" ", f.HttpRequest.SilentDrop)))
+				}
+				
 				sb.AppendLine();
 			}
 
