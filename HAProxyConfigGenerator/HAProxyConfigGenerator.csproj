@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-	<PackageReference Include="Microsoft.NETCore.Runtime.CoreCLR" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+	<PackageReference Include="Microsoft.NETCore.Runtime.CoreCLR" Version="2.0.8" />
   </ItemGroup>
 
 </Project>
