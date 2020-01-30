@@ -268,6 +268,10 @@ namespace HAProxyConfigGenerator
 			public string SSLEngine { get; set; }
 			[JsonProperty("ssl-mode-async")]
 			public bool SSLModeAsync { get; set; }
+			public int? nbproc { get; set; }
+			public int? nbthread { get; set; }
+			[JsonProperty("cpu-map")]
+			public string CpuMap { get; set; }
 
 			public Dictionary<string, string> Stats { get; set; } = new Dictionary<string, string>();
 			public Dictionary<string, object> Tune { get; set; } = new Dictionary<string, object>();
@@ -840,6 +844,23 @@ namespace HAProxyConfigGenerator
 				sb.AppendLine(string.Format("    spread-checks\t{0}", Global.SpreadChecks).TrimEnd());
 			}
 
+			sb.AppendLine();
+			
+			if (Global.nbproc.HasValue)
+			{
+				sb.AppendLine(string.Format("    nbproc	{0}", Global.nbproc).TrimEnd());
+			}
+			
+			if (Global.nbthread.HasValue)
+			{
+				sb.AppendLine(string.Format("    nbthread	{0}", Global.nbthread).TrimEnd());
+			}
+			
+			if (!string.IsNullOrWhiteSpace(Global.CpuMap))
+			{
+				sb.AppendLine(string.Format("    cpu-map	{0}", Global.CpuMap).TrimEnd());
+			}
+			
 			sb.AppendLine();
 
 			if (!string.IsNullOrWhiteSpace(Global.SSLServerVerify))
