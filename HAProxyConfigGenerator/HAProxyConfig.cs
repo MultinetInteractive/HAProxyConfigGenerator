@@ -845,22 +845,22 @@ namespace HAProxyConfigGenerator
 			}
 
 			sb.AppendLine();
-			
+
 			if (Global.nbproc.HasValue)
 			{
-				sb.AppendLine(string.Format("    nbproc	{0}", Global.nbproc).TrimEnd());
+				sb.AppendLine(string.Format("    nbproc\t{0}", Global.nbproc).TrimEnd());
 			}
-			
+
 			if (Global.nbthread.HasValue)
 			{
-				sb.AppendLine(string.Format("    nbthread	{0}", Global.nbthread).TrimEnd());
+				sb.AppendLine(string.Format("    nbthread\t{0}", Global.nbthread).TrimEnd());
 			}
-			
+
 			if (!string.IsNullOrWhiteSpace(Global.CpuMap))
 			{
-				sb.AppendLine(string.Format("    cpu-map	{0}", Global.CpuMap).TrimEnd());
+				sb.AppendLine(string.Format("    cpu-map\t{0}", Global.CpuMap).TrimEnd());
 			}
-			
+
 			sb.AppendLine();
 
 			if (!string.IsNullOrWhiteSpace(Global.SSLServerVerify))
