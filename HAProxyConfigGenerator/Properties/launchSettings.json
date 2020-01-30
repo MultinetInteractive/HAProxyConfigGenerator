@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "HAProxyConfigGenerator": {
+      "commandName": "Project"
+    }
+  }
+}

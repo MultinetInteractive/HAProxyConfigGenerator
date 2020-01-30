@@ -20,6 +20,7 @@ namespace HAProxyConfigGenerator
 		public DefaultsSection Defaults { get; set; } = new DefaultsSection();
 		public List<Frontend> FrontEnd { get; set; } = new List<Frontend>();
 		public List<Backend> BackEnd { get; set; } = new List<Backend>();
+		[JsonProperty("cache")]
 		public List<Cache> Caches { get; set; } = new List<Cache>();
 
 		#region Subclasses
@@ -123,11 +124,11 @@ namespace HAProxyConfigGenerator
 
 		public class Cache
 		{
-			[JsonProperty("name")]
+			[JsonProperty("cacheName")]
 			public string CacheName { get; set; }
-			[JsonProperty("total-max-size")]
+			[JsonProperty("totalMaxSize")]
 			public int TotalMaxSize { get; set; }
-			[JsonProperty("max-age")]
+			[JsonProperty("maxAge")]
 			public int MaxAge { get; set; }
 		}
 
@@ -142,8 +143,8 @@ namespace HAProxyConfigGenerator
 			public List<SetHeader> SetHeader { get; set; } = new List<SetHeader>();
 			[JsonProperty("replace-header")]
 			public List<ReplaceHeader> ReplaceHeader { get; set; } = new List<ReplaceHeader>();
-			[JsonProperty("cache-use")]
-			public List<string> CacheUse { get; set; } = new List<string>();
+			[JsonProperty("cache-store")]
+			public List<string> CacheStore { get; set; } = new List<string>();
 		}
 
 		public class HttpRequest
@@ -159,8 +160,8 @@ namespace HAProxyConfigGenerator
 			public List<string> Deny { get; set; } = new List<string>();
 			[JsonProperty("silent-drop")]
 			public List<string> SilentDrop { get; set; } = new List<string>();
-			[JsonProperty("cache-store")]
-			public List<string> CacheStore { get; set; } = new List<string>();
+			[JsonProperty("cache-use")]
+			public List<string> CacheUse { get; set; } = new List<string>();
 		}
 
 		public class Redirect
@@ -644,9 +645,9 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 
-				if (b.HttpRequest.CacheStore.Count > 0)
+				if (b.HttpRequest.CacheUse.Count > 0)
 				{
-					sb.AppendLine(string.Format("    http-request\tcache-use\t{0}", string.Join(" ", b.HttpRequest.CacheStore)));
+					sb.AppendLine(string.Format("    http-request\tcache-use\t{0}", string.Join(" ", b.HttpRequest.CacheUse)));
 				}
 				sb.AppendLine();
 			}
@@ -665,9 +666,9 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 
-				if (b.HttpResponse.CacheUse.Count > 0)
+				if (b.HttpResponse.CacheStore.Count > 0)
 				{
-					sb.AppendLine(string.Format("    http-response\tcache-store\t{0}", string.Join(" ", b.HttpResponse.CacheUse)));
+					sb.AppendLine(string.Format("    http-response\tcache-store\t{0}", string.Join(" ", b.HttpResponse.CacheStore)));
 				}
 				sb.AppendLine();
 			}
