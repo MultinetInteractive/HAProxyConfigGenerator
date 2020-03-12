@@ -143,6 +143,8 @@ namespace HAProxyConfigGenerator
 			public List<SetHeader> SetHeader { get; set; } = new List<SetHeader>();
 			[JsonProperty("replace-header")]
 			public List<ReplaceHeader> ReplaceHeader { get; set; } = new List<ReplaceHeader>();
+			[JsonProperty("del-header")]
+			public List<BaseHeader> DeleteHeader { get; set; } = new List<BaseHeader>();
 			[JsonProperty("cache-store")]
 			public List<string> CacheStore { get; set; } = new List<string>();
 		}
@@ -153,6 +155,8 @@ namespace HAProxyConfigGenerator
 			public List<SetHeader> SetHeader { get; set; } = new List<SetHeader>();
 			[JsonProperty("replace-header")]
 			public List<ReplaceHeader> ReplaceHeader { get; set; } = new List<ReplaceHeader>();
+			[JsonProperty("del-header")]
+			public List<BaseHeader> DeleteHeader { get; set; } = new List<BaseHeader>();
 			[JsonProperty("redirect")]
 			public List<RedirectHeader> Redirect { get; set; } = new List<RedirectHeader>();
 
@@ -194,19 +198,21 @@ namespace HAProxyConfigGenerator
 			public List<string> Conditions { get; set; } = new List<string>();
 		}
 
-		public class SetHeader
+		public class BaseHeader
 		{
 			public string Header { get; set; }
-			public string Value { get; set; }
 			public List<string> Conditions { get; set; } = new List<string>();
 		}
 
-		public class ReplaceHeader
+		public class SetHeader : BaseHeader
 		{
-			public string Header { get; set; }
+			public string Value { get; set; }
+		}
+
+		public class ReplaceHeader : BaseHeader
+		{
 			public string Match { get; set; }
 			public string Replace { get; set; }
-			public List<string> Conditions { get; set; } = new List<string>();
 		}
 
 		public class RequestCaseInsensitiveReplace
@@ -645,6 +651,12 @@ namespace HAProxyConfigGenerator
 				}
 				sb.AppendLine();
 
+				foreach (var sh in b.HttpRequest.DeleteHeader)
+				{
+					sb.AppendLine(string.Format("    http-response\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
+				}
+				sb.AppendLine();
+
 				if (b.HttpRequest.CacheUse.Count > 0)
 				{
 					sb.AppendLine(string.Format("    http-request\tcache-use\t{0}", string.Join(" ", b.HttpRequest.CacheUse)));
@@ -663,6 +675,12 @@ namespace HAProxyConfigGenerator
 				foreach (var sh in b.HttpResponse.ReplaceHeader)
 				{
 					sb.AppendLine(string.Format("    http-response\treplace-header\t{0}\t{1}\t{2}\t{3}", sh.Header, sh.Match, sh.Replace, string.Join(" ", sh.Conditions)));
+				}
+				sb.AppendLine();
+
+				foreach (var sh in b.HttpResponse.DeleteHeader)
+				{
+					sb.AppendLine(string.Format("    http-response\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
 				}
 				sb.AppendLine();
 
