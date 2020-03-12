@@ -462,6 +462,12 @@ namespace HAProxyConfigGenerator
 
 				sb.AppendLine();
 
+				foreach (var sh in f.HttpRequest.DeleteHeader)
+				{
+					sb.AppendLine(string.Format("    http-request\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
+				}
+				sb.AppendLine();
+
 				if (f.HttpRequest.Deny.Count > 0)
 				{
 					sb.AppendLine(string.Format("    http-request\tdeny\tif\t{0}", string.Join(" ", f.HttpRequest.Deny)));
@@ -489,7 +495,12 @@ namespace HAProxyConfigGenerator
 				{
 					sb.AppendLine(string.Format("    http-response\treplace-header\t{0}\t{1}\t{2}\t{3}", sh.Header, sh.Match, sh.Replace, string.Join(" ", sh.Conditions)));
 				}
+				sb.AppendLine();
 
+				foreach (var sh in f.HttpResponse.DeleteHeader)
+				{
+					sb.AppendLine(string.Format("    http-response\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
+				}
 				sb.AppendLine();
 			}
 
@@ -653,7 +664,7 @@ namespace HAProxyConfigGenerator
 
 				foreach (var sh in b.HttpRequest.DeleteHeader)
 				{
-					sb.AppendLine(string.Format("    http-response\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
+					sb.AppendLine(string.Format("    http-request\tdel-header\t{0}\t{1}", sh.Header, string.Join(" ", sh.Conditions)));
 				}
 				sb.AppendLine();
 
