@@ -166,6 +166,15 @@ namespace HAProxyConfigGenerator
 			public List<string> SilentDrop { get; set; } = new List<string>();
 			[JsonProperty("cache-use")]
 			public List<string> CacheUse { get; set; } = new List<string>();
+
+			[JsonProperty("set-var")]
+			public List<SetVariable> SetVar { get; set; } = new List<SetVariable>();
+		}
+
+		public class SetVariable
+		{
+			public string Name { get; set; }
+			public string Variable { get; set; }
 		}
 
 		public class Redirect
@@ -480,6 +489,12 @@ namespace HAProxyConfigGenerator
 					sb.AppendLine(string.Format("    http-request\tsilent-drop\tif\t{0}", string.Join(" ", f.HttpRequest.SilentDrop)));
 				}
 
+				sb.AppendLine();
+
+				foreach (var sh in f.HttpRequest.SetVar)
+				{
+					sb.AppendLine(string.Format("    http-request\tset-var({0})\t{1}", sh.Name, sh.Variable));
+				}
 				sb.AppendLine();
 			}
 
